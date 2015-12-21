@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<!--<script type="text/javascript" src="js/canvas_drawImage.js"></script>-->
+		<title></title>
+	</head>
+	<body style="background: black;">
+		<div class="content">
+			<canvas id="canvas" style="display: block;margin: 0 auto;border: 1px solid #aaa;"></canvas>
+			<input type="range"  name="" value="1.0" id="scanl-range" min="0.5" max="3" step="0.01" style="display: block;margin: 20px auto;width: 800px;" />
+			<canvas id="water-canvas" width="" height="" style="display: none;margin: 0 auto;border: 1px solid #aaa;"></canvas>
+		</div>
+		<script type="text/javascript">
+			var canvas = document.getElementById("canvas");
+			var context = canvas.getContext("2d");
+			var scanl = document.getElementById("scanl-range");
+			var image = new Image();
+			
+			var water_canvas = document.getElementById("water-canvas");
+			var water_context = water_canvas.getContext("2d");
+			
+			window.onload = function(){
+				
+				canvas.height = 256;
+				canvas.width = 341;
+				
+				var scanl_range = scanl.value;
+				
+//				context.fillStyle = 'red';
+//				context.fillRect( 100, 100, 400, 400 );
+				
+				image.src = 'image/Hydrangeas.jpg';
+				image.onload = function() {
+//					context.drawImage(image, 0, 0, canvas.width, canvas.height );
+//					context.drawImage( image, 180, 150, 600, 530, 100, 100, 600, 520  )
+					drawImageByScanl( scanl_range );
+					
+					scanl.onmousemove = function() {
+						scanl_range = scanl.value;
+						drawImageByScanl( scanl_range );
+					}
+					
+				}
+				
+//				绘制水印
+				water_canvas.height = 30;
+				water_canvas.width = 180;
+				
+				water_context.font="bold 20px Arial";
+				//water_canvas.lineWidth = "1";
+				water_context.fillStyle = "rgba(255, 255, 255, 0.5)";
+				water_context.textBaseline = "middle";
+				water_context.fillText( "== Devil_ ==", 30, 15);
+				
+			}
+			
+				function drawImageByScanl ( scanl_range ) {
+					
+					var imageHeight = 256*scanl_range;
+					var imageWidth = 341*scanl_range;
+					
+//					var sx = imageWidth/2 - canvas.width /2;
+//					var sy = imageHeight/2 - canvas.height/ 2;
+//					
+//					context.drawImage( image, sx, sy, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height )
+					
+					var dx = canvas.width/2 - imageWidth/2;
+					var dy = canvas.height/2 - imageHeight/2;
+					
+					context.clearRect( 0, 0, canvas.width, canvas.height );
+					context.drawImage( image, dx, dy, imageWidth, imageHeight );
+					context.drawImage( water_canvas, canvas.width - water_canvas.width, canvas.height - water_canvas.height )
+				}
+		</script>
+	</body>
+</html>
